@@ -1,0 +1,22 @@
+{
+    "name": "encurtador-de-link/thea",
+    "description": "A client for Arrow",
+    "version": "1.0",
+    "type": "library",
+    "homepage": "http://git.ezdlv.com/encurtador-de-link/thea",
+    "require": {
+        "php": ">=5.5.9",
+        "guzzlehttp/guzzle": "~6.1",
+        "illuminate/support": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Snorlax\\": "src"
+        }
+    }
+}
