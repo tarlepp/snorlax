@@ -12,4 +12,6 @@ abstract class Resource
     {
         $this->client = $client;
     }
+
+    abstract public function getBaseUri();
 }
