@@ -27,9 +27,15 @@ class RestClient
      */
     private $config = [];
 
+    /**
+     * @var Illuminate\Support\Collection
+     */
+    private $cache;
+
     public function __construct(array $config)
     {
         $this->config = $config;
+        $this->cache = new Collection();
 
         $this->setClient($config);
         $this->addResources(
@@ -78,19 +84,23 @@ class RestClient
 
     public function getResource($resource)
     {
+        if ($this->cache->has($resource)) {
+            return $this->cache->get($resource);
+        }
+
         if (!$this->resources->has($resource)) {
             throw new ResourceNotImplemented($resource);
         }
 
-        $resource = $this->resources->get($resource);
-        $instance = $resource['instance'];
+        $params = $this->resources->get($resource);
+        $instance = $params['instance'];
         if (is_null($instance)) {
-            $class = $resource['class'];
+            $class = $params['class'];
 
             $instance = new $class($this->client);
         }
 
-        return $instance;
+        return $this->cache[$resource] = $instance;
     }
 
     public function getOriginalClient()

@@ -1,16 +1,33 @@
 <?php
 
 use Snorlax\Resource\Resource;
-use Snorlax\Common\Get;
 
 class PokemonResource extends Resource
 {
-    use Get;
-
-    const BASE_PATH = 'pokemons';
-
     public function getBaseUri()
     {
-        return static::BASE_PATH;
+        return 'pokemons';
+    }
+
+    public function getActions()
+    {
+        return [
+            'all' => [
+                'method' => 'GET',
+                'path' => '/'
+            ],
+            'get' => [
+                'method' => 'GET',
+                'path' => '/{0}'
+            ],
+            'capture' => [
+                'method' => 'POST',
+                'path' => '/'
+            ],
+            'attack' => [
+                'method' => 'PATCH',
+                'path' => '/{0}/{1}/{2}'
+            ]
+        ];
     }
 }
