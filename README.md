@@ -45,10 +45,16 @@ $client = new RestClient([
     ]
 ]);
 
-// GET http://localhost/api/pokemons
-$response = $client->pokemons->all();
-// GET http://localhost/api/pokemons/143
-$response = $client->pokemons->get(143);
+// GET http://localhost/api/pokemons?sort=id:asc
+$response = $client->pokemons->all(['
+    'query' => [
+        'sort' => 'id:asc'
+    ]
+']);
+// GET http://localhost/api/pokemons/143.json?fields=id,name
+$response = $client->pokemons->get(143, [
+    'query' => ['fields' => 'id,name']
+]);
 // POST http://localhost/api/pokemons
 $response = $client->pokemons->create([
     'body' => [
