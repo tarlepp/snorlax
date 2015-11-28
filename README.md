@@ -4,8 +4,6 @@ A light-weight RESTful client built on top of [Guzzle](http://docs.guzzlephp.org
 
 # Basic Usage
 
-First, create your with your resource, extending the class `Snorlax\Resource\Resource`.
-
 ```php
 <?php
 
@@ -81,7 +79,7 @@ $pokemons = $client->pokemons->all([
         'limit' => 150
     ],
     'headers' => [
-        'Authentication: Bearer [token]'
+        'Authentication' => 'Bearer [token]'
     ]
 ]);
 

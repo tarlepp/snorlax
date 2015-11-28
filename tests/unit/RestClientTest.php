@@ -2,25 +2,35 @@
 
 use Mockery as m;
 
+/**
+ * Tests for the Snorlax\RestClient class
+ */
 class RestClientTest extends TestCase
 {
-    public function testResources()
+    /**
+     * Verifies that the constructor correctly sets the resources
+     */
+    public function testResourcesGetter()
     {
         $client = $this->getRestClient();
 
         $this->assertInstanceOf('PokemonResource', $client->pokemons);
+        $this->assertInstanceOf('PokemonResource', $client->getResource('pokemons'));
     }
 
     /**
      * @expectedException \Snorlax\Exception\ResourceNotImplemented
      * @expectedExceptionMessage Resource "digimons" is not implemented
      */
-    public function testResourceDoesNotImplemented()
+    public function testResourceNotImplementedException()
     {
         $this->getRestClient()->digimons;
     }
 
-    public function testCustomClientInstance()
+    /**
+     * Verifies that the custom instance passed through the constructor is set
+     */
+    public function testCustomClientWithInstance()
     {
         $custom_client = m::mock('GuzzleHttp\ClientInterface');
 
@@ -32,7 +42,10 @@ class RestClientTest extends TestCase
         $this->assertSame($custom_client, $client->getOriginalClient());
     }
 
-    public function testCustomClientClosure()
+    /**
+     * Verifies that the custom closure gets executed when client is created
+     */
+    public function testCustomClientWithClosure()
     {
         $custom_client = m::mock('GuzzleHttp\ClientInterface');
         $client = $this->getRestClient([

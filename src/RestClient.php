@@ -3,6 +3,7 @@
 namespace Snorlax;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Collection;
 use Snorlax\Exception\ResourceNotImplemented;
 
@@ -23,15 +24,19 @@ class RestClient
     private $resources = null;
 
     /**
+     * @var Illuminate\Support\Collection
+     */
+    private $cache;
+
+    /**
      * @var array
      */
     private $config = [];
 
     /**
-     * @var Illuminate\Support\Collection
+     * Initializes configuration parameters and resources
+     * @param array $config
      */
-    private $cache;
-
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -43,11 +48,19 @@ class RestClient
         );
     }
 
+    /**
+     * Allows us to use $client->resource so we don't need to call
+     * $client->getResource($resource) everytime
+     */
     public function __get($resource)
     {
         return $this->getResource($resource);
     }
 
+    /**
+     * Appends the given resources to the ones already being used
+     * @param array $resources
+     */
     public function addResources(array $resources)
     {
         if (!($this->resources instanceof Collection)) {
@@ -62,6 +75,13 @@ class RestClient
         }
     }
 
+    /**
+     * Sets the client according to the given $config array, following the rules:
+     * - If no custom client is given, instantiates a new GuzzleHttp\Client
+     * - If an instance of GuzzleHttp\ClientInterface is given, we only pass it through
+     * - If a closure is given, it gets executed receiving the parameters given
+     * @param array $config
+     */
     public function setClient(array $config)
     {
         if (isset($config['client'])) {
@@ -72,7 +92,7 @@ class RestClient
         if (isset($config['custom'])) {
             if (is_callable($config['custom'])) {
                 $client = $config['custom']($params);
-            } else {
+            } else if ($config['custom'] instanceof ClientInterface) {
                 $client = $config['custom'];
             }
         } else {
@@ -82,6 +102,12 @@ class RestClient
         $this->client = $client;
     }
 
+    /**
+     * Instantiates and returns the asked resource.
+     * @param string The resource name
+     * @throws \Snorlax\Exception\ResourceNotImplemented If the resource is not available
+     * @return \Snorlax\Resource The instantiated resource
+     */
     public function getResource($resource)
     {
         if ($this->cache->has($resource)) {
@@ -103,6 +129,10 @@ class RestClient
         return $this->cache[$resource] = $instance;
     }
 
+    /**
+     * Returns the internal client
+     * @return \GuzzleHttp\ClientInterface
+     */
     public function getOriginalClient()
     {
         return $this->client;

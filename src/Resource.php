@@ -1,6 +1,6 @@
 <?php
 
-namespace Snorlax\Resource;
+namespace Snorlax;
 
 use GuzzleHttp\ClientInterface;
 
@@ -18,22 +18,32 @@ abstract class Resource
     /**
      * @var mixed
      */
-    protected $response;
+    protected $last_response;
 
+    /**
+     * Initializes the client
+     * @param GuzzleHttp\ClientInterface
+     */
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * Calls the method contained in the actions of this resource
+     * @param string $method
+     * @param array $args
+     * @return \StdClass The JSON decoded response
+     */
     public function __call($method, $args)
     {
         $action = $this->getActions()[$method];
         $uri = $this->getBaseUri() . $this->getPath($action, $args);
         $params = $this->getParams($args);
 
-        $this->response = $this->client->request($action['method'], $uri, $params);
+        $this->last_response = $this->client->request($action['method'], $uri, $params);
 
-        return json_decode($this->response->getBody());
+        return json_decode($this->last_response->getBody());
     }
 
     /**
@@ -66,12 +76,12 @@ abstract class Resource
     }
 
     /**
-     * Returns the response of the last executed request
+     * Returns the last_response of the last executed request
      * @return mixed
      */
     public function getLastResponse()
     {
-        return $this->response;
+        return $this->last_response;
     }
 
     /**

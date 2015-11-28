@@ -1,6 +1,6 @@
 <?php
 
-use Snorlax\Resource\Resource;
+use Snorlax\Resource;
 
 class PokemonResource extends Resource
 {

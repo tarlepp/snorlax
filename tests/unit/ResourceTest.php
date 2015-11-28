@@ -3,6 +3,10 @@
 use Mockery as m;
 use GuzzleHttp\Psr7\Response;
 
+/**
+ * Tests for the Snorlax\Resource class. Since it is an abstract class, we need
+ * to test using the example class PokemonResource.
+ */
 class ResourceTest extends TestCase
 {
     public function testAllMethod()
