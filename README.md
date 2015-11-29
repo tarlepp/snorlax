@@ -91,6 +91,42 @@ $pokemons = $client->pokemons->create([
 ]);
 ```
 
+# Changing client options
+
+If you want to set default headers for every request you send to the default guzzle client, just use the `headers` options on your `params` config key, just like the [Guzzle docs](http://guzzle.readthedocs.org/en/latest/request-options.html#headers).
+
+```php
+<?php
+
+// Using a callable to instantiate a new client everytime
+$client = new Snorlax\RestClient([
+    'client' => [
+        'params' => [
+            'headers' => [
+                'X-Foo' => 'Bar'
+            ]
+        ]
+    ]
+]);
+```
+
+# Setting a base URI
+
+If all your resources are under the same base URI, you can pass it on the constructor instead of declaring on the `resource` class.
+
+```php
+<?php
+
+// Using a callable to instantiate a new client everytime
+$client = new Snorlax\RestClient([
+    'client' => [
+        'params' => [
+            'base_uri' => 'http://localhost/api'
+        ]
+    ]
+]);
+```
+
 # Using a custom client
 
 If you don't want to use `Guzzle`'s default client (or want to mock one), `Snorlax` accepts any class that implements `GuzzleHttp\ClientInterface`, so just pass your custom client in the constructor. Can be an instance or a callable.
@@ -109,7 +145,7 @@ class MyOwnClient implements GuzzleHttp\ClientInterface
 }
 
 // Using a callable to instantiate a new client everytime
-$client = new Snorlax\GuzzleHttp([
+$client = new Snorlax\RestClient([
     'client' => [
         'custom' => function(array $params) {
             return new MyOwnClient($params);
@@ -118,7 +154,7 @@ $client = new Snorlax\GuzzleHttp([
     ]
 ]);
 
-$client = new Snorlax\GuzzleHttp([
+$client = new Snorlax\RestClient([
     'client' => [
         'custom' => new MyOwnClient(['param1' => 1])
     ]
