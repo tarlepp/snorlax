@@ -1,9 +1,11 @@
 {
     "name": "ezdeliveryco/snorlax",
     "description": "A lightweight REST client that gives you full control of your resources",
-    "version": "1.0",
+    "version": "1.0.0",
+    "license": "MIT",
     "type": "library",
     "homepage": "https://github.com/ezdeliveryco/snorlax",
+    "keywords": ["guzzle", "api", "rest", "restful"],
     "require": {
         "php": ">=5.5.9",
         "guzzlehttp/guzzle": "~6.1",
