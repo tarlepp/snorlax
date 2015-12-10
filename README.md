@@ -104,7 +104,11 @@ $client = new Snorlax\RestClient([
         'params' => [
             'headers' => [
                 'X-Foo' => 'Bar'
-            ]
+            ],
+            'defaults' => [
+                'debug' => true
+            ],
+            'cache' => true
         ]
     ]
 ]);

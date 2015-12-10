@@ -57,4 +57,22 @@ class RestClientTest extends TestCase
 
         $this->assertSame($custom_client, $client->getOriginalClient());
     }
+
+    /**
+     * Verifies that the instance is correctly set with cache and debug params
+     */
+    public function testClientWithCacheAndDebug()
+    {
+        $custom_client = m::mock('GuzzleHttp\ClientInterface');
+
+        $client = $this->getRestClient([
+            'custom' => $custom_client,
+            'params' => [
+                'defaults' => ['debug' => true],
+                'cache' => true
+            ]
+        ]);
+
+        $this->assertSame($custom_client, $client->getOriginalClient());
+    }
 }

@@ -4,7 +4,9 @@ namespace Snorlax;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
+use Kevinrob\GuzzleCache\CacheMiddleware;
 use Snorlax\Exception\ResourceNotImplemented;
 
 /**
@@ -96,10 +98,28 @@ class RestClient
                 $client = $config['custom'];
             }
         } else {
-            $client = new Client($params);
+            $client = $this->createDefaultClient($params);
         }
 
         $this->client = $client;
+    }
+
+    /**
+     * Creates a new default client based on the given parameters
+     * @param array $params
+     * @return \GuzzleHttp\Client
+     */
+    private function createDefaultClient(array $params)
+    {
+        $stack = HandlerStack::create();
+        if (isset($params['cache']) && $params['cache'] === true) {
+            $middleware = new CacheMiddleware();
+            $stack->push($middleware, 'snorlax-cache');
+        }
+
+        $params = array_merge($params, ['handler' => $stack]);
+
+        return new Client($params);
     }
 
     /**
