@@ -1,12 +1,18 @@
 <?php
 
 use Mockery as m;
+use Snorlax\Auth\BearerAuth;
 
 /**
  * Tests for the Snorlax\RestClient class
  */
 class RestClientTest extends TestCase
 {
+    public function tearDown()
+    {
+        m::close();
+    }
+
     /**
      * Verifies that the constructor correctly sets the resources
      */
@@ -74,5 +80,22 @@ class RestClientTest extends TestCase
         ]);
 
         $this->assertSame($custom_client, $client->getOriginalClient());
+    }
+
+    /**
+     * Verifies that the authorization method is set correctly
+     */
+    public function testSetAuthMethod()
+    {
+        $custom_client = m::mock('GuzzleHttp\ClientInterface');
+        $custom_client
+            ->shouldReceive('setDefaultOption')
+            ->once()
+            ->with('headers', ['Authorization' => 'Bearer token']);
+
+        $client = $this->getRestClient([
+            'custom' => $custom_client
+        ]);
+        $client->setAuthMethod(new BearerAuth('token'));
     }
 }

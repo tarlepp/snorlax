@@ -7,6 +7,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Kevinrob\GuzzleCache\CacheMiddleware;
+use Snorlax\Auth\Authorization;
 use Snorlax\Exception\ResourceNotImplemented;
 
 /**
@@ -147,6 +148,17 @@ class RestClient
         }
 
         return $this->cache[$resource] = $instance;
+    }
+
+    /**
+     * Changes the authentication method on all the requests made by this client
+     * @param \Snorlax\Auth\Authorization $auth The authorizaztion method
+     */
+    public function setAuthMethod(Authorization $auth)
+    {
+        $this->client->setDefaultOption('headers', [
+            'Authorization' => sprintf('%s %s', $auth->getAuthType(), $auth->getCredentials())
+        ]);
     }
 
     /**
