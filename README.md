@@ -79,7 +79,7 @@ $pokemons = $client->pokemons->all([
         'limit' => 150
     ],
     'headers' => [
-        'Authentication' => 'Bearer [token]'
+        'X-Foo' => 'Bar'
     ]
 ]);
 
@@ -98,7 +98,6 @@ If you want to set default headers for every request you send to the default guz
 ```php
 <?php
 
-// Using a callable to instantiate a new client everytime
 $client = new Snorlax\RestClient([
     'client' => [
         'params' => [
@@ -121,7 +120,6 @@ If all your resources are under the same base URI, you can pass it on the constr
 ```php
 <?php
 
-// Using a callable to instantiate a new client everytime
 $client = new Snorlax\RestClient([
     'client' => [
         'params' => [
@@ -129,6 +127,22 @@ $client = new Snorlax\RestClient([
         ]
     ]
 ]);
+```
+
+# API Authorization
+
+`Snorlax` supports two types of Authorization for now: `Bearer` and `Basic`. They're pretty easy to use.
+
+```php
+<?php
+
+$client = new Snorlax\RestClient([
+    // ...
+]);
+// Basic authorization
+$client->setAuthMethod(new Snorlax\Auth\BasicAuth('user', 'password'));
+// Bearer authorization
+$client->setAuthMethod(new Snorlax\Auth\BearerAuth('your token'));
 ```
 
 # Using a custom client
@@ -140,7 +154,7 @@ If you don't want to use `Guzzle`'s default client (or want to mock one), `Snorl
 
 class MyOwnClient implements GuzzleHttp\ClientInterface
 {
-    private $params;
+    private $config;
 
     public function __construct(array $params)
     {
