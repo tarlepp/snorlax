@@ -98,6 +98,25 @@ public function parse($method, $response){
 }
 ```
 
+Another usage could be to cast certain fields are  data types. In this example, we'll cast any fields called `created_at` or `updated_at` to Carbon isntances
+
+```php
+public function parse($action, $response){
+    
+    $date_fields = ['created_at', 'updated_at'];        
+
+    $response = $response->pokemon;
+    
+    foreach( $date_fields as $date_field ){
+        if( property_exists($response, $date_field) ){
+            $response->{$date_field} = Carbon::parse($response->{$date_field});
+        }
+    }
+            
+    return $response;
+}
+```
+
 # Sending parameters and headers
 
 As said before, `Snorlax` is built on top of `Guzzle`, so it works basically the same way on passing headers, query strings and request bodies.
