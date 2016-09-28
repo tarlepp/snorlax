@@ -65,7 +65,7 @@ As you can see, each action on your resource is defined an array with two keys, 
 
 `Snorlax` assume your API returns JSON, so it already returns an `StdClass` object with the response, decoded by `json_decode`. If you want to get the raw object returned by `Guzzle`, use `$client->resource->getLastResponse()`.
 
-# Amended the response
+# Amending the response
 
 As noted above, `Snorlax` returns an `StdClass` object, however Resources may overwrite the `->after()` method to manipulate the returned response. This is useful when an API returns a nested set of data such as `{'pokemon': {'name':'Mew'}}` and you only want the actual data (in this case `pokemon`). In this example we could use
 
