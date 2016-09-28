@@ -42,8 +42,11 @@ abstract class Resource
         $params = $this->getParams($args);
 
         $this->last_response = $this->client->request($action['method'], $uri, $params);
+        
+        $response = $this->last_response->getBody();
+        
+        return $this->parse($method, $response);
 
-        return json_decode($this->last_response->getBody());
     }
 
     /**
@@ -82,6 +85,16 @@ abstract class Resource
     public function getLastResponse()
     {
         return $this->last_response;
+    }
+    
+    /**
+     * Returns the response parsed, by default as a json-decoded StdObject
+     * @param string $method 
+     * @param string $response 
+     * @return string
+     */
+    protected function parse($method, $response){
+        return json_decode($response);
     }
 
     /**

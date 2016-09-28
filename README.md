@@ -65,6 +65,58 @@ As you can see, each action on your resource is defined an array with two keys, 
 
 `Snorlax` assume your API returns JSON, so it already returns an `StdClass` object with the response, decoded by `json_decode`. If you want to get the raw object returned by `Guzzle`, use `$client->resource->getLastResponse()`.
 
+# Amending the response
+
+As noted above, `Snorlax` returns an `StdClass` object, however Resources may overwrite the `->parse()` method to manipulate the returned response. This is useful when an API returns a nested set of data such as `{'pokemon': {'name':'Mew'}}` and you only want the actual data (in this case `pokemon`). In this example we could use
+
+```php
+public function parse($method, $response){
+    return $response->pokemon;
+}
+```
+
+This would return the actual `pokemon` object. Another scario is that you may want to return a Laravel Collection (`Illuminate\Support\Collection`) of objects, you could simply do
+
+```php
+public function parse($method, $response){
+    return collect($response->pokemen);
+}
+```
+
+The `$method` argument is the name of the method which was called to perform the request, such as 'all', or 'get'. This is useful to manipulate different response, such as
+
+```php
+public function parse($method, $response){
+    switch($method){
+        case 'all':
+            return collect($response->pokemen);
+        break;
+        case 'get':
+            return $response->pokemon;
+        break;
+    }
+}
+```
+
+Another usage could be to cast certain fields are  data types. In this example, we'll cast any fields called `created_at` or `updated_at` to Carbon isntances
+
+```php
+public function parse($action, $response){
+    
+    $date_fields = ['created_at', 'updated_at'];        
+
+    $response = $response->pokemon;
+    
+    foreach( $date_fields as $date_field ){
+        if( property_exists($response, $date_field) ){
+            $response->{$date_field} = Carbon::parse($response->{$date_field});
+        }
+    }
+            
+    return $response;
+}
+```
+
 # Sending parameters and headers
 
 As said before, `Snorlax` is built on top of `Guzzle`, so it works basically the same way on passing headers, query strings and request bodies.
