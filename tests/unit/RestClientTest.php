@@ -55,7 +55,7 @@ class RestClientTest extends TestCase
     {
         $custom_client = m::mock('GuzzleHttp\ClientInterface');
         $client = $this->getRestClient([
-            'custom' => function(array $params) use ($custom_client){
+            'custom' => function (array $params) use ($custom_client) {
                 return $custom_client;
             },
             'params' => []

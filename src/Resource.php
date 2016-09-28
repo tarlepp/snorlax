@@ -46,7 +46,6 @@ abstract class Resource
         $response = $this->last_response->getBody();
         
         return $this->parse($method, $response);
-
     }
 
     /**
@@ -89,11 +88,12 @@ abstract class Resource
     
     /**
      * Returns the response parsed, by default as a json-decoded StdObject
-     * @param string $method 
-     * @param string $response 
+     * @param string $method
+     * @param string $response
      * @return string
      */
-    protected function parse($method, $response){
+    protected function parse($method, $response)
+    {
         return json_decode($response);
     }
 
