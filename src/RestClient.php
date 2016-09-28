@@ -95,7 +95,7 @@ class RestClient
         if (isset($config['custom'])) {
             if (is_callable($config['custom'])) {
                 $client = $config['custom']($params);
-            } else if ($config['custom'] instanceof ClientInterface) {
+            } elseif ($config['custom'] instanceof ClientInterface) {
                 $client = $config['custom'];
             }
         } else {
