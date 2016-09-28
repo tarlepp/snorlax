@@ -67,10 +67,10 @@ As you can see, each action on your resource is defined an array with two keys, 
 
 # Amending the response
 
-As noted above, `Snorlax` returns an `StdClass` object, however Resources may overwrite the `->after()` method to manipulate the returned response. This is useful when an API returns a nested set of data such as `{'pokemon': {'name':'Mew'}}` and you only want the actual data (in this case `pokemon`). In this example we could use
+As noted above, `Snorlax` returns an `StdClass` object, however Resources may overwrite the `->parse()` method to manipulate the returned response. This is useful when an API returns a nested set of data such as `{'pokemon': {'name':'Mew'}}` and you only want the actual data (in this case `pokemon`). In this example we could use
 
 ```php
-public function after($method, $response){
+public function parse($method, $response){
     return $response->pokemon;
 }
 ```
@@ -78,7 +78,7 @@ public function after($method, $response){
 This would return the actual `pokemon` object. Another scario is that you may want to return a Laravel Collection (`Illuminate\Support\Collection`) of objects, you could simply do
 
 ```php
-public function after($method, $response){
+public function parse($method, $response){
     return collect($response->pokemen);
 }
 ```
@@ -86,7 +86,7 @@ public function after($method, $response){
 The `$method` argument is the name of the method which was called to perform the request, such as 'all', or 'get'. This is useful to manipulate different response, such as
 
 ```php
-public function after($method, $response){
+public function parse($method, $response){
     switch($method){
         case 'all':
             return collect($response->pokemen);
