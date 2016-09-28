@@ -42,8 +42,11 @@ abstract class Resource
         $params = $this->getParams($args);
 
         $this->last_response = $this->client->request($action['method'], $uri, $params);
+        
+        $response = json_decode($this->last_response->getBody());
+        
+        return $this->after($method, $response);
 
-        return json_decode($this->last_response->getBody());
     }
 
     /**
@@ -82,6 +85,16 @@ abstract class Resource
     public function getLastResponse()
     {
         return $this->last_response;
+    }
+    
+    /**
+     * Method called after just before the reponse is returned
+     * @param string $method 
+     * @param string $response 
+     * @return string
+     */
+    protected function after($method, $response){
+        return $response;
     }
 
     /**
