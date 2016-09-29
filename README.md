@@ -18,7 +18,7 @@ class PokemonResource extends Resource
 {
     public function getBaseUri()
     {
-        // You don't want a raw value like this, use an environment variable ;)
+        // You don't want a raw value like this, use an environment variable :)
         return 'http://localhost/api/pokemons';
     }
 
