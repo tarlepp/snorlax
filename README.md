@@ -11,7 +11,7 @@ A light-weight RESTful client built on top of [Guzzle](http://docs.guzzlephp.org
 ```php
 <?php
 
-use Snorlax\Resource\Resource;
+use Snorlax\Resource;
 use Snorlax\RestClient;
 
 class PokemonResource extends Resource
