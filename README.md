@@ -27,41 +27,45 @@ class PokemonResource extends Resource
         return [
             'all' => [
                 'method' => 'GET',
-                'path' => '/'
+                'path' => '/',
             ],
             'get' => [
                 'method' => 'GET',
-                'path' => '/{0}.json'
+                'path' => '/{0}.json',
             ],
             'create' => [
                 'method' => 'POST',
-                'path' => '/'
-            ]
+                'path' => '/',
+            ],
         ];
     }
 }
 
 $client = new RestClient([
     'resources' => [
-        'pokemons' => PokemonResource::class
-    ]
+        'pokemons' => PokemonResource::class,
+    ],
 ]);
 
 // GET http://localhost/api/pokemons?sort=id:asc
-$response = $client->pokemons->all(['
+$response = $client->pokemons->all([
     'query' => [
-        'sort' => 'id:asc'
-    ]
-']);
+        'sort' => 'id:asc',
+    ],
+]);
+
 // GET http://localhost/api/pokemons/143.json?fields=id,name
 $response = $client->pokemons->get(143, [
-    'query' => ['fields' => 'id,name']
+    'query' => [
+        'fields' => 'id,name',
+    ],
 ]);
+
 // POST http://localhost/api/pokemons
 $response = $client->pokemons->create([
     'body' => [
-        'name' => 'Bulbasaur'
-    ]
+        'name' => 'Bulbasaur',
+    ],
 ]);
 ```
 
@@ -74,7 +78,8 @@ As you can see, each action on your resource is defined an array with two keys, 
 As noted above, `Snorlax` returns an `StdClass` object, however Resources may overwrite the `->parse()` method to manipulate the returned response. This is useful when an API returns a nested set of data such as `{'pokemon': {'name':'Mew'}}` and you only want the actual data (in this case `pokemon`). In this example we could use
 
 ```php
-public function parse($method, $response){
+public function parse($method, $response)
+{
     return $response->pokemon;
 }
 ```
@@ -82,22 +87,24 @@ public function parse($method, $response){
 This would return the actual `pokemon` object. Another scario is that you may want to return a Laravel Collection (`Illuminate\Support\Collection`) of objects, you could simply do
 
 ```php
-public function parse($method, $response){
-    return collect($response->pokemen);
+public function parse($method, $response)
+{
+    return collect($response->pokemon);
 }
 ```
 
 The `$method` argument is the name of the method which was called to perform the request, such as 'all', or 'get'. This is useful to manipulate different response, such as
 
 ```php
-public function parse($method, $response){
-    switch($method){
+public function parse($method, $response)
+{
+    switch ($method) {
         case 'all':
-            return collect($response->pokemen);
-        break;
+            return collect($response->pokemon);
+            break;
         case 'get':
             return $response->pokemon;
-        break;
+            break;
     }
 }
 ```
@@ -105,14 +112,17 @@ public function parse($method, $response){
 Another usage could be to cast certain fields are  data types. In this example, we'll cast any fields called `created_at` or `updated_at` to Carbon isntances
 
 ```php
-public function parse($action, $response){
-
-    $date_fields = ['created_at', 'updated_at'];
+public function parse($action, $response)
+{
+    $date_fields = [
+        'created_at',
+        'updated_at',
+    ];
 
     $response = $response->pokemon;
 
-    foreach( $date_fields as $date_field ){
-        if( property_exists($response, $date_field) ){
+    foreach ($date_fields as $date_field) {
+        if (property_exists($response, $date_field)) {
             $response->{$date_field} = Carbon::parse($response->{$date_field});
         }
     }
@@ -132,18 +142,21 @@ $pokemons = $client->pokemons->all([
     'query' => [
         'sort' => 'name',
         'offset' => 0,
-        'limit' => 150
+        'limit' => 150,
     ],
     'headers' => [
-        'X-Foo' => 'Bar'
-    ]
+        'X-Foo' => 'Bar',
+    ],
 ]);
 
 $pokemons = $client->pokemons->create([
     'body' => [
         'name' => 'Ivysaur',
-        'attacks' => ['Tackle', 'Leer']
-    ]
+        'attacks' => [
+            'Tackle',
+            'Leer',
+        ],
+    ],
 ]);
 ```
 
@@ -158,14 +171,14 @@ $client = new Snorlax\RestClient([
     'client' => [
         'params' => [
             'headers' => [
-                'X-Foo' => 'Bar'
+                'X-Foo' => 'Bar',
             ],
             'defaults' => [
-                'debug' => true
+                'debug' => true,
             ],
-            'cache' => true
-        ]
-    ]
+            'cache' => true,
+        ],
+    ],
 ]);
 ```
 
@@ -179,9 +192,9 @@ If all your resources are under the same base URI, you can pass it on the constr
 $client = new Snorlax\RestClient([
     'client' => [
         'params' => [
-            'base_uri' => 'http://localhost/api'
-        ]
-    ]
+            'base_uri' => 'http://localhost/api',
+        ],
+    ],
 ]);
 ```
 
@@ -224,13 +237,17 @@ $client = new Snorlax\RestClient([
         'custom' => function(array $params) {
             return new MyOwnClient($params);
         },
-        'params' => ['param1' => 'value']
-    ]
+        'params' => [
+            'param1' => 'value',
+        ],
+    ],
 ]);
 
 $client = new Snorlax\RestClient([
     'client' => [
-        'custom' => new MyOwnClient(['param1' => 1])
-    ]
+        'custom' => new MyOwnClient([
+            'param1' => 1,
+        ]),
+    ],
 ]);
 ```
