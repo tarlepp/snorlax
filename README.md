@@ -1,7 +1,7 @@
 # Snorlax
 
 [![Build Status](https://travis-ci.org/ezdeliveryco/snorlax.svg?branch=master)](https://travis-ci.org/ezdeliveryco/snorlax)
-[![StyleCI](https://styleci.io/repos/69507965/shield?branch=master)](https://styleci.io/repos/69507965)
+[![StyleCI](https://styleci.io/repos/46307948/shield?branch=master)](https://styleci.io/repos/69507965)
 [![codecov](https://codecov.io/gh/ezdeliveryco/snorlax/branch/master/graph/badge.svg)](https://codecov.io/gh/ezdeliveryco/snorlax)
 
 A light-weight RESTful client built on top of [Guzzle](http://docs.guzzlephp.org/en/latest/) that gives you full control of your API's resources. Its based on method definitions and parameters for your URLs. See the usage below.
@@ -106,17 +106,17 @@ Another usage could be to cast certain fields are  data types. In this example, 
 
 ```php
 public function parse($action, $response){
-    
-    $date_fields = ['created_at', 'updated_at'];        
+
+    $date_fields = ['created_at', 'updated_at'];
 
     $response = $response->pokemon;
-    
+
     foreach( $date_fields as $date_field ){
         if( property_exists($response, $date_field) ){
             $response->{$date_field} = Carbon::parse($response->{$date_field});
         }
     }
-            
+
     return $response;
 }
 ```
