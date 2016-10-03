@@ -254,3 +254,6 @@ $client = new Snorlax\RestClient([
 
 # Contributing
 Please see the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file for guidelines.
+
+# License
+Please see the [LICENSE](LICENSE) file for License.
