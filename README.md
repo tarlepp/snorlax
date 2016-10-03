@@ -258,4 +258,4 @@ Please see the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file for guidelines.
 # LICENSE
 [The MIT License (MIT)](LICENSE)
 
-Copyright (c) 2016 Pedro Maia
+Copyright (c) 2016 EzDelivery
